@@ -21,7 +21,6 @@ if (CUDA_FOUND)
     CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS};
     -O3
-    -gencode arch=compute_20,code=[sm_20,sm_21]
     -gencode arch=compute_30,code=sm_30
     -gencode arch=compute_35,code=sm_35
     -gencode arch=compute_50,code=[sm_50,compute_50]
@@ -118,7 +117,9 @@ if (CUDA_FOUND)
     ${DARKNET_PATH}/src/detection_layer.c         ${DARKNET_PATH}/src/softmax_layer.c
     ${DARKNET_PATH}/src/dropout_layer.c           ${DARKNET_PATH}/src/tree.c
     ${DARKNET_PATH}/src/gemm.c                    ${DARKNET_PATH}/src/utils.c
-    ${DARKNET_PATH}/src/gru_layer.c
+    ${DARKNET_PATH}/src/gru_layer.c               ${DARKNET_PATH}/src/l2norm_layer.c
+    ${DARKNET_PATH}/src/logistic_layer.c          ${DARKNET_PATH}/src/upsample_layer.c
+    ${DARKNET_PATH}/src/yolo_layer.c
 
     ${DARKNET_PATH}/examples/art.c                ${DARKNET_PATH}/examples/regressor.c
     ${DARKNET_PATH}/examples/captcha.c            ${DARKNET_PATH}/examples/rnn.c
@@ -130,13 +131,13 @@ if (CUDA_FOUND)
     ${DARKNET_PATH}/examples/go.c                 ${DARKNET_PATH}/examples/voxel.c
     ${DARKNET_PATH}/examples/lsd.c                ${DARKNET_PATH}/examples/writing.c
     ${DARKNET_PATH}/examples/nightmare.c          ${DARKNET_PATH}/examples/yolo.c
+    ${DARKNET_PATH}/examples/attention.c          ${DARKNET_PATH}/examples/darknet.c
 
     ${DARKNET_PATH}/src/activation_kernels.cu     ${DARKNET_PATH}/src/deconvolutional_kernels.cu
     ${DARKNET_PATH}/src/avgpool_layer_kernels.cu  ${DARKNET_PATH}/src/dropout_layer_kernels.cu
     ${DARKNET_PATH}/src/blas_kernels.cu           ${DARKNET_PATH}/src/im2col_kernels.cu
     ${DARKNET_PATH}/src/col2im_kernels.cu         ${DARKNET_PATH}/src/maxpool_layer_kernels.cu
-    ${DARKNET_PATH}/src/convolutional_kernels.cu  ${DARKNET_PATH}/src/network_kernels.cu
-    ${DARKNET_PATH}/src/crop_layer_kernels.cu
+    ${DARKNET_PATH}/src/convolutional_kernels.cu  ${DARKNET_PATH}/src/crop_layer_kernels.cu
   )
 
   target_link_libraries(${PROJECT_NAME}_lib
@@ -183,7 +184,9 @@ else()
     ${DARKNET_PATH}/src/detection_layer.c         ${DARKNET_PATH}/src/softmax_layer.c
     ${DARKNET_PATH}/src/dropout_layer.c           ${DARKNET_PATH}/src/tree.c
     ${DARKNET_PATH}/src/gemm.c                    ${DARKNET_PATH}/src/utils.c
-    ${DARKNET_PATH}/src/gru_layer.c
+    ${DARKNET_PATH}/src/gru_layer.c               ${DARKNET_PATH}/src/l2norm_layer.c
+    ${DARKNET_PATH}/src/logistic_layer.c          ${DARKNET_PATH}/src/upsample_layer.c
+    ${DARKNET_PATH}/src/yolo_layer.c
 
     ${DARKNET_PATH}/examples/art.c                ${DARKNET_PATH}/examples/regressor.c
     ${DARKNET_PATH}/examples/captcha.c            ${DARKNET_PATH}/examples/rnn.c
@@ -195,6 +198,7 @@ else()
     ${DARKNET_PATH}/examples/go.c                 ${DARKNET_PATH}/examples/voxel.c
     ${DARKNET_PATH}/examples/lsd.c                ${DARKNET_PATH}/examples/writing.c
     ${DARKNET_PATH}/examples/nightmare.c          ${DARKNET_PATH}/examples/yolo.c
+    ${DARKNET_PATH}/examples/attention.c          ${DARKNET_PATH}/examples/darknet.c
   )
 
   target_link_libraries(${PROJECT_NAME}_lib

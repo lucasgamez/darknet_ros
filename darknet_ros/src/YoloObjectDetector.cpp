@@ -298,30 +298,24 @@ void *YoloObjectDetector::detectInThread()
 
   layer l = net_.layers[net_.n - 1];
   float *X = buffLetter_[(buffIndex_ + 2) % 3].data;
-  float *prediction = network_predict(net_, X);
+  float *prediction = network_predict(&net_, X);
 
   memcpy(predictions_[demoIndex_], prediction, l.outputs * sizeof(float));
   mean_arrays(predictions_, demoFrame_, l.outputs, avg_);
   l.output = lastAvg2_;
   if (demoDelay_ == 0)
     l.output = avg_;
-  if (l.type == DETECTION) {
-    get_detection_boxes(l, 1, 1, demoThresh_, probs_, boxes_, 0);
-  } else if (l.type == REGION) {
-    get_region_boxes(l, buff_[0].w, buff_[0].h, net_.w, net_.h, demoThresh_, probs_, boxes_, 0, 0,
-                     demoHier_, 1);
-  } else {
-    error("Last layer must produce detections\n");
-  }
+  int nboxes = 0;
+  detection *dets = get_network_boxes(&net_, net_.w, net_.h, demoThresh_, .5, 0, 1, &nboxes);
   if (nms > 0)
-    do_nms_obj(boxes_, probs_, l.w * l.h * l.n, l.classes, nms);
+    do_nms_sort(dets, l.w * l.h * l.n, l.classes, nms);
 
   if (enableConsoleOutput_) {
     printf("\nFPS:%.1f\n", fps_);
     printf("Objects:\n\n");
   }
   image display = buff_[(buffIndex_ + 2) % 3];
-  draw_detections(display, demoDetections_, demoThresh_, boxes_, probs_, demoNames_, demoAlphabet_,
+  draw_detections(display, dets, nboxes, demoThresh_, demoNames_, demoAlphabet_,
                   demoClasses_);
 
   // extract the bounding boxes and send them to ROS
@@ -444,7 +438,7 @@ void YoloObjectDetector::setupNetwork(char *cfgfile, char *weightfile, char *dat
   demoHier_ = hier;
   fullScreen_ = fullscreen;
   printf("YOLO_V2\n");
-  net_ = parse_network_cfg(cfgfile);
+  net_ = *parse_network_cfg(cfgfile);
   if (weightfile) {
     load_weights(&net_, weightfile);
   }

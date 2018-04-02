@@ -1,4 +1,6 @@
-# YOLO v2 for ROS: Real-Time Object Detection for ROS
+# YOLO v3 for ROS: Real-Time Object Detection for ROS
+
+This repository is forked from [github.com/leggedrobotics/darknet\_ros](https://github.com/leggedrobotics/darknet_ros)
 
 ## Overview
 
@@ -31,7 +33,7 @@ This software is built on the Robotic Operating System ([ROS]), which needs to b
 In order to install darknet_ros, clone the latest version from this repository into your catkin workspace and compile the package using ROS.
 
     cd catkin_workspace/src
-    git clone --recursive git@github.com:leggedrobotics/darknet_ros.git
+    git clone --recursive https://github.com/kanezaki/darknet_ros.git
     cd ../
 
 To maximize performance, make sure to build in *Release* mode. You can specify the build type by setting
@@ -57,6 +59,7 @@ The yolo-voc.weights and tiny-yolo-voc.weights are downloaded automatically in t
     cd catkin_workspace/src/darknet_ros/darknet_ros/yolo_network_config/weights/
     wget http://pjreddie.com/media/files/yolo-voc.weights
     wget http://pjreddie.com/media/files/tiny-yolo-voc.weights
+    wget http://pjreddie.com/media/files/yolov3.weights
 
 
 To use the COCO detection objects, you can download the following weights:
